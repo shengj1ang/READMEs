@@ -45,6 +45,8 @@ This improves readability, maintainability, and ease of testing.
 ---
 
 ## 5. Project Structure
+
+```
 ├── main.c          # Program entry point and system orchestration
 ├── clock.c         # Timekeeping and hour/minute/second management
 ├── dates.c         # Date handling, leap years, and DST calculations
@@ -53,6 +55,7 @@ This improves readability, maintainability, and ease of testing.
 ├── comparator.c   # LDR signal comparison and threshold detection
 ├── LEDarray.c     # Binary hour display on LED array
 ├── LCD.c          # LCD output for time and status display
+```
 ---
 
 ## 6. How It Works
