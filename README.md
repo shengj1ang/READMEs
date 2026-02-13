@@ -42,6 +42,10 @@ Design and program a fully automatic outside-light controller that:
 
 ## 4. Demonstration
 
+<video src="https://github.com/shengj1ang/READMEs/raw/refs/heads/ECM-mini-project/mini-project-demo-video.mp4"
+       width="720"
+       controls>
+</video>
 https://github.com/shengj1ang/READMEs/raw/refs/heads/ECM-mini-project/mini-project-demo-video.mp4
 
 ---
