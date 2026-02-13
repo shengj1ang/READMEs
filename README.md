@@ -140,131 +140,69 @@ git clone <repository-url>
 - The design can be adapted to other regions with minimal modification
 
 ---
+## 12. Core Algorithms (Condensed)
 
-## 12. Core Algorithms
-
-This project relies on a set of robust, lightweight algorithms designed to run efficiently on a microcontroller while remaining accurate over long periods of time.
-
----
-
-### 12.1 Ambient Light Detection Algorithm
-
-**Purpose:**  
-Determine whether it is currently day or night using an LDR.
-
-**Method:**  
-- The LDR output is sampled periodically using a comparator or ADC  
-- A predefined threshold distinguishes bright (day) from dark (night) conditions  
-- Stable sampling avoids rapid switching at dawn and dusk
-
-**Result:**  
-- Night detected: light is allowed to turn ON (subject to time rules)  
-- Day detected: light is forced OFF
+This project uses a small set of efficient, deterministic algorithms designed for long-term accuracy on a resource-constrained microcontroller. All algorithms operate using integer arithmetic and interrupt-driven events.
 
 ---
 
-### 12.2 Real-Time Clock (RTC) Algorithm
+### 12.1 Ambient Light Detection
 
-**Purpose:**  
-Maintain accurate time without an external RTC module.
+Ambient light is measured using an LDR sampled via ADC/comparator hardware.  
+A fixed threshold distinguishes day from night, with stable edge detection to avoid rapid toggling at dawn and dusk.
 
-**Method:**  
-- A hardware timer generates periodic interrupts  
-- On each interrupt:
-- Seconds are incremented  
-- Overflow propagates to minutes, hours, and days  
-- Date tracking includes leap year and month length handling
-
-**Result:**  
-- A continuously running internal clock  
-- Current time always available for display and control
+- Day → light forced OFF  
+- Night → light allowed ON (subject to time rules)
 
 ---
 
-### 12.3 Binary Hour Display Algorithm
+### 12.2 Internal Real-Time Clock
 
-**Purpose:**  
-Display the current hour of the day in binary on an LED array.
+Time is maintained entirely in software using a hardware timer interrupt.  
+Each minute tick updates seconds, minutes, hours, and calendar date, including correct month lengths and leap years.
 
-**Method:**  
-- The hour value (0–23) is masked bit-by-bit  
-- Each bit controls a corresponding LED  
-- LEDs update whenever the hour changes
-
-**Example:**  
-Hour = 13 → Binary = 01101
-**Result:**  
-- Simple and hardware-efficient time visualization
+The clock runs continuously without an external RTC.
 
 ---
 
-### 12.4 Energy-Saving Time Window Algorithm
+### 12.3 Binary Hour Display
 
-**Purpose:**  
-Reduce unnecessary lighting during low-activity hours.
-
-**Method:**  
-- The current hour is checked during each control cycle  
-- Between 01:00 and 05:00:
-  - Light output is forced OFF regardless of ambient light  
-- Outside this window:
-  - Light behavior depends on LDR input
-
-**Result:**  
-- Reduced energy consumption  
-- Predictable and policy-driven behavior
+The current hour (0–23) is displayed in binary on an LED array.  
+Each bit of the hour value directly drives one LED, updating only when the hour changes.
 
 ---
 
-### 12.5 Daylight Saving Time Adjustment Algorithm
+### 12.4 Energy-Saving Time Window
 
-**Purpose:**  
-Automatically adjust the system clock according to UK DST rules.
-
-**Method:**  
-- Tracks the current date and day of the week  
-- DST transitions occur on:
-  - Last Sunday of March (clock moves forward one hour)  
-  - Last Sunday of October (clock moves backward one hour)  
-- Leap years are handled correctly
-
-**Result:**  
-- Fully automatic DST handling  
-- No user intervention required
+To reduce unnecessary power usage, the lamp output is forced OFF between approximately 01:00 and 05:00, regardless of ambient light conditions.  
+Outside this window, lamp behavior depends solely on day/night detection.
 
 ---
 
-### 12.6 Solar Synchronisation Algorithm
+### 12.5 Daylight Saving Time (UK)
 
-**Purpose:**  
-Prevent long-term clock drift and maintain alignment with solar time.
+UK daylight saving rules are handled automatically in software:
 
-**Method:**  
-- Sunrise and sunset are inferred from LDR transitions  
-- The midpoint between dusk and dawn approximates solar midnight or noon  
-- Small corrective adjustments are applied when drift is detected  
-- Seasonal day length variation provides time-of-year context
+- Clock moves forward on the last Sunday of March  
+- Clock moves backward on the last Sunday of October  
 
-**Result:**  
-- Indefinite long-term accuracy  
-- Synchronisation with the sun rather than a perfect oscillator
+Transition dates are computed dynamically each year, with leap years handled correctly.
 
 ---
 
-### 12.7 Testing Acceleration Algorithm
+### 12.6 Solar Synchronisation and Drift Correction
 
-**Purpose:**  
-Enable rapid testing without waiting for real-time day cycles.
+Sunrise and sunset events are inferred from LDR transitions.  
+The midpoint between these events is used to estimate solar noon, which is compared to a modeled solar noon value.
 
-**Method:**  
-- A compile-time `#define` scales timer intervals  
-- In testing mode:
-  - One second represents one hour  
-- All control logic remains unchanged
+A bounded moving-average correction is applied gradually to prevent long-term clock drift while avoiding instability from daily noise.
 
-**Result:**  
-- Fast debugging and validation  
-- Identical logic in testing and deployment builds
+---
+
+### 12.7 Accelerated Testing Mode
+
+A compile-time testing mode scales timer intervals so that simulated time passes faster (e.g. one second represents one hour).  
+All control logic remains identical between testing and real-time operation.
 
 
 ## Efficiency Highlights
