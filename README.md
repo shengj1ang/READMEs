@@ -1,15 +1,18 @@
 # 1. Energy-Saving Automatic Outside Light  
 *A Microcontroller-Based Smart Lighting System*
 
----
+## Team
+- Pietro Di Penta
+- Sheng Jiang
 
-## 2. Project Overview
-
-This project implements a fully automated, energy-efficient outside lighting system using a microcontroller, inspired by real-world street and garden lighting solutions.  
-The system intelligently reacts to ambient light levels, keeps accurate time, adjusts for daylight saving time (DST), and minimizes unnecessary energy consumption by switching lights off during low-activity hours.
-
-Once installed, the system requires zero user maintenance and remains synchronized with natural daylight indefinitely.
-
+## Project Aim
+Design and program a fully automatic outside-light controller that:
+- Detects ambient light using an LDR.
+- Displays current hour in binary on the LED array.
+- Forces lamp OFF between approximately 01:00 and 05:00.
+- Applies UK daylight savings transitions automatically.
+- Maintains long-term synchrony with the sun.
+- Requires no routine maintenance after setup.
 ---
 
 ## 3. Key Features
@@ -46,54 +49,53 @@ This improves readability, maintainability, and ease of testing.
 
 ## 5. Project Structure
 
-```
-├── main.c          # Program entry point and system orchestration
-├── clock.c         # Timekeeping and hour/minute/second management
-├── dates.c         # Date handling, leap years, and DST calculations
-├── timers.c        # Hardware timer configuration and timing logic
-├── interrupts.c   # Interrupt service routines (ISR)
-├── comparator.c   # LDR signal comparison and threshold detection
-├── LEDarray.c     # Binary hour display on LED array
-├── LCD.c          # LCD output for time and status display
-```
----
+The firmware is interrupt-driven and uses a small set of modules:
+- `timers.c` + `interrupts.c` provide minute ticks and light-transition events.
+- `clock.c` + `dates.c` manage calendar logic, DST, leap years, and expected solar noon.
+- `ADC.c` + `comparator.c` convert LDR readings into sunrise/sunset events.
+- `LEDarray.c` + `LCD.c` provide output visualization.
+- `main.c` orchestrates state updates, drift correction, output control, and sleep.
+
+### Requirement Mapping
+1. Day/night detection with LDR:
+`ADC_init`, `ADC_getval`, `Comp1_init`, comparator interrupt events (`sunrise_event`, `sunset_event`).
+
+2. Binary hour display:
+`LEDarray_disp_bin(dt.time.hour)` in `main.c`.
+
+3. Power-saving OFF window (1am-5am):
+`LIGHT_OFF_HOUR_AM` and `LIGHT_ON_HOUR_AM` in `main.c` enforce lamp OFF during this range.
+
+4. DST support:
+UK DST boundaries are calculated with `last_sunday_of_month` and applied in `increase_clock_by_minute`.
+
+5. Long-term solar synchrony:
+Measured solar noon from sunrise/sunset is compared with modeled solar noon (`today_solar_noon_min`), then corrected using a moving average.
+
+6. Fully automatic behavior:
+After initial date/time constants are set, the runtime loop is autonomous.
 
 ## 6. How It Works
 
-1. **Startup**
-   - Hardware timers and interrupts are initialized  
-   - Internal clock and date tracking begin
-
-2. **Light Monitoring**
-   - The LDR is continuously sampled  
-   - Ambient brightness determines day or night state
-
-3. **Lighting Control**
-   - At night: LED turns ON  
-   - Between 01:00 and 05:00: LED is forced OFF  
-   - During daylight: LED remains OFF
-
-4. **Time Display**
-   - Current hour is displayed in binary on the LED array  
-   - Readable time and DST status are shown on the LCD
-
-5. **Long-Term Accuracy**
-   - Sunrise and sunset timing is used to correct clock drift  
-   - Day length information helps infer season and DST transitions
-
+1. Initialize peripherals and startup state.
+2. Consume ISR-produced minute ticks.
+3. Capture sunrise/sunset edges from comparator ISR.
+4. At end of each observed day, compute noon error and update drift estimate.
+5. Refresh LCD and LED outputs.
+6. Sleep in Idle mode until next interrupt.
 ---
 
-## 7. Testing Mode
+## 7. Testing Mode and Key Configuration
 
-To speed up development and debugging, the system supports a testing mode:
+- `config.h`
+`testing_mode = 1` for accelerated testing, `0` for real-time operation.
 
-- A full 24-hour day can be simulated in 24 seconds  
-- Controlled via a compile-time `#define` directive  
-- Enables rapid validation of:
-  - Day and night transitions  
-  - Daylight saving time changes  
-  - Energy-saving time window logic
+- `main.c`
+`LIGHT_OFF_HOUR_AM` and `LIGHT_ON_HOUR_AM` define the forced-off period.
+`MAX_DRIFT_VAL` limits applied drift correction.
 
+- `main.c`
+`dt` contains initial date/time and is used to bootstrap weekday/DST state.
 ---
 
 ## 8. Hardware Requirements
@@ -129,10 +131,6 @@ git clone <repository-url>
 	3.	Compile and flash to the target hardware
 	4.	(Optional) Enable testing mode for rapid simulation
 ```
-  📝 Notes
-•	Designed for UK daylight saving rules
-•	Solar synchronization ensures indefinite accuracy
-•	Suitable for adaptation to other regions with minimal changes
 ---
 
 ## 11. Notes
@@ -267,3 +265,40 @@ Enable rapid testing without waiting for real-time day cycles.
 **Result:**  
 - Fast debugging and validation  
 - Identical logic in testing and deployment builds
+
+
+## Efficiency Highlights
+The current code includes multiple efficiency-focused ideas:
+
+- Interrupt handlers are minimal and flag-based (`interrupts.c`):
+ISRs only queue work (`unprocessed_minutes`, sunrise/sunset flags) and avoid heavy processing.
+
+- Priority-based ISR separation (`interrupts.c`):
+Timer0 runs high priority and comparator runs low priority, preserving timing accuracy.
+
+- Idle sleep between events (`main.c`):
+`CPUDOZEbits.IDLEN = 1` plus `Sleep()` reduces active CPU time and power draw.
+
+- Integer-only time and solar calculations (`clock.c`, `main.c`):
+No floating-point math is used in runtime control loops.
+
+- Precomputed equation-of-time lookup table (`clock.c`):
+Daily solar-noon modeling uses a static table instead of expensive real-time trig/math.
+
+- Circular history buffer for drift (`main.c`):
+A fixed-size 7-sample window keeps RAM usage predictable and small.
+
+- Moving-average drift correction (`main.c`):
+Smoothing daily noise prevents overreaction to single-day outliers.
+
+- Clamped correction magnitude (`MAX_DRIFT_VAL` in `main.c`):
+Limits instantaneous correction steps for stable behavior.
+
+- Fast-path minute step logic (`clock.c`):
+`increase_clock_by_minute` exits quickly for non-rollover minutes.
+
+- Compile-time test acceleration (`testing_mode` in `config.h`):
+Allows rapid validation (about one simulated day per 24 seconds) without changing main logic.
+
+- Hardware mapping centralization (`board_layout.h`):
+Pin mapping macros reduce duplication, simplify maintenance, and lower wiring/configuration error risk.
