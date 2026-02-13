@@ -40,10 +40,9 @@ Design and program a fully automatic outside-light controller that:
 
 ---
 
-## 4. System Design
+## 4. Demonstration
 
-The project follows a modular design, with each hardware and software responsibility isolated into its own source file.  
-This improves readability, maintainability, and ease of testing.
+https://github.com/shengj1ang/READMEs/raw/refs/heads/ECM-mini-project/mini-project-demo-video.mp4
 
 ---
 
@@ -102,7 +101,6 @@ After initial date/time constants are set, the runtime loop is autonomous.
 
 - Microcontroller (as used in Labs 1–3)
 - Light Dependent Resistor (LDR)
-- LED (outside light simulation)
 - LED array (binary hour display)
 - Optional LCD display
 - Supporting resistors and wiring
@@ -140,72 +138,7 @@ git clone <repository-url>
 - The design can be adapted to other regions with minimal modification
 
 ---
-## 12. Core Algorithms (Condensed)
-
-This project uses a small set of efficient, deterministic algorithms designed for long-term accuracy on a resource-constrained microcontroller. All algorithms operate using integer arithmetic and interrupt-driven events.
-
----
-
-### 12.1 Ambient Light Detection
-
-Ambient light is measured using an LDR sampled via ADC/comparator hardware.  
-A fixed threshold distinguishes day from night, with stable edge detection to avoid rapid toggling at dawn and dusk.
-
-- Day → light forced OFF  
-- Night → light allowed ON (subject to time rules)
-
----
-
-### 12.2 Internal Real-Time Clock
-
-Time is maintained entirely in software using a hardware timer interrupt.  
-Each minute tick updates seconds, minutes, hours, and calendar date, including correct month lengths and leap years.
-
-The clock runs continuously without an external RTC.
-
----
-
-### 12.3 Binary Hour Display
-
-The current hour (0–23) is displayed in binary on an LED array.  
-Each bit of the hour value directly drives one LED, updating only when the hour changes.
-
----
-
-### 12.4 Energy-Saving Time Window
-
-To reduce unnecessary power usage, the lamp output is forced OFF between approximately 01:00 and 05:00, regardless of ambient light conditions.  
-Outside this window, lamp behavior depends solely on day/night detection.
-
----
-
-### 12.5 Daylight Saving Time (UK)
-
-UK daylight saving rules are handled automatically in software:
-
-- Clock moves forward on the last Sunday of March  
-- Clock moves backward on the last Sunday of October  
-
-Transition dates are computed dynamically each year, with leap years handled correctly.
-
----
-
-### 12.6 Solar Synchronisation and Drift Correction
-
-Sunrise and sunset events are inferred from LDR transitions.  
-The midpoint between these events is used to estimate solar noon, which is compared to a modeled solar noon value.
-
-A bounded moving-average correction is applied gradually to prevent long-term clock drift while avoiding instability from daily noise.
-
----
-
-### 12.7 Accelerated Testing Mode
-
-A compile-time testing mode scales timer intervals so that simulated time passes faster (e.g. one second represents one hour).  
-All control logic remains identical between testing and real-time operation.
-
-
-## Efficiency Highlights
+## 12. Efficiency Highlights
 The current code includes multiple efficiency-focused ideas:
 
 - Interrupt handlers are minimal and flag-based (`interrupts.c`):
