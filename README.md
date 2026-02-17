@@ -59,14 +59,59 @@ The integer example above may have gone wrong for obvious reasons. We might expe
     volatile float value;
   
 - Did you get the expected result?
+
+No — the LED still stays off.
+
+
 - What is the value of the variable when the if comparison is done? (Use debug mode)
+
+![P4](https://raw.githubusercontent.com/shengj1ang/READMEs/refs/heads/ECM-labx/images/P4.png)
+
+On the PIC, value is very close to 0.1 but not exactly 0.1. With 32-bit float it will typically be around:
+
+	•	value ≈ 0.10000002 (from 1.2f - 1.1f)
+
+	•	while ZZ as a float is about 0.1000000015
+
+So value == ZZ is false.
+
+(Watch window showing 0.0 is almost certainly a display/format precision issue — increase the displayed precision / view the raw hex to see the non-zero value.)
+
+
+
 - Also compare the size of the program again, is it what you expected?
+
+![P5](https://raw.githubusercontent.com/shengj1ang/READMEs/refs/heads/ECM-labx/images/P5.png)
+
+	•	Program Used: 1,532 bytes
+
+	•	Data Used: 20 bytes
+
+This is still much larger than the original integer-only version (72 bytes program, 2 bytes data), but smaller than your earlier mixed float/int build, because now the compiler can use float routines consistently.
 
 Try the same calculation in Excel and/or Python and/or MATLAB. Note you will need to ensure that enough significant figures are displayed to see what is happening (at least 16 decimal places)
 
 - Do you get the expected result?
+
+	•	Python float is IEEE-754 double (64-bit), so:
+
+	•	1.2 is stored as 1.19999999999999996
+
+	•	1.1 is stored as 1.10000000000000009
+
+	•	0.1 is stored as 0.10000000000000001
+
+	•	therefore 1.2 - 1.1 = 0.09999999999999987, not exactly 0.1
+
+	•	So (a-b) == z is False, but diff is tiny (~1.39e-16), and math.isclose is True.
+
 - Was it the same value as on the PIC?
+
+No. Python uses 64-bit double so the error is around 10^{-16}, while the PIC uses 32-bit float so the rounding error is much larger (around 10^{-8}). Therefore get a different stored value and a different subtraction result.
+
 - What is going on? Why are you seeing these values?
+
+Numbers like 0.1, 1.1 and 1.2 cannot be represented exactly in binary floating-point, so they are stored as the nearest representable values. The subtraction is then performed on these approximations and rounded again, so the result is close to 0.1 but not exactly equal. This is why == fails and why a tolerance check (e.g., isclose / epsilon) is needed.
 
 # Precision
 This is not just an issue when floats are used to store decimal point numbers, similar issues can occur when floats are used to store integer numbers. Try changing the values as follows (keeping the float type)
