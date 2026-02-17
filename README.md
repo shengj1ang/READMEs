@@ -149,7 +149,19 @@ Finally, change XX back to the previous value (920020001) and change the type to
     volatile long int value;
 
 - Is everything working as expected?
+
+Yes. The LED lights because long int stores the integer exactly, so 920020001 - 1 equals 920020000 and the equality test succeeds.
+
+![P9](https://raw.githubusercontent.com/shengj1ang/READMEs/refs/heads/ECM-labx/images/P9.png)
+
+
 - Check the size of the program and data memory used in bytes and compare to the previous.
+![P10](https://raw.githubusercontent.com/shengj1ang/READMEs/refs/heads/ECM-labx/images/P10.png)
+
+With volatile long int value you used Program: 114 bytes and Data: 4 bytes.
+Compared to the float version (Program 1,532 bytes, Data 20 bytes), this is much smaller because integer arithmetic does not pull in the floating-point support library.
+
+
 
 The examples above show that no number system is perfect and they each have their own issues and limitations. It is important to be mindful of how computers store numbers and perform calculations. On 8-bit microcontrollers (or any microcontroller without a hardware floating-point unit) it is much more efficient to use integer types and occasions that truly justify using floats are extremely rare. 
 
