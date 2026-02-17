@@ -87,7 +87,7 @@ So value == ZZ is false.
 
 	•	Data Used: 20 bytes
 
-This is still much larger than the original integer-only version (72 bytes program, 2 bytes data), but smaller than your earlier mixed float/int build, because now the compiler can use float routines consistently.
+This is still much larger than the original integer-only version (72 bytes program, 2 bytes data), but smaller than the earlier mixed float/int build, because now the compiler can use float routines consistently.
 
 Try the same calculation in Excel and/or Python and/or MATLAB. Note you will need to ensure that enough significant figures are displayed to see what is happening (at least 16 decimal places)
 
