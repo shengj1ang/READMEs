@@ -67,13 +67,7 @@ No — the LED still stays off.
 
 ![P4](https://raw.githubusercontent.com/shengj1ang/READMEs/refs/heads/ECM-labx/images/P4.png)
 
-On the PIC, value is very close to 0.1 but not exactly 0.1. With 32-bit float it will typically be around:
-
-	•	value ≈ 0.10000002 (from 1.2f - 1.1f)
-
-	•	while ZZ as a float is about 0.1000000015
-
-So value == ZZ is false.
+In debug mode on the PIC, value = 0.100000024 while expected (float)ZZ = 0.1 (stored float). Since they are not exactly equal, value == ZZ is false.
 
 (Watch window showing 0.0 is almost certainly a display/format precision issue — increase the displayed precision / view the raw hex to see the non-zero value.)
 
