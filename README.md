@@ -26,9 +26,12 @@ Now edit the numbers in the calculation by changing the values to be a 10th of t
 #define YY 1.1
 #define ZZ 0.1
  ```
-Image1
-Image2
-Image3
+ 
+![P1](https://raw.githubusercontent.com/shengj1ang/READMEs/refs/heads/ECM-labx/images/P1.png)
+
+![P2](https://raw.githubusercontent.com/shengj1ang/READMEs/refs/heads/ECM-labx/images/P2.png)
+
+![P3](https://raw.githubusercontent.com/shengj1ang/READMEs/refs/heads/ECM-labx/images/P3.png)
 
 1) What result do you get?
 The LED stays off.
