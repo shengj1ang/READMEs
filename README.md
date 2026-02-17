@@ -34,18 +34,25 @@ Now edit the numbers in the calculation by changing the values to be a 10th of t
 ![P3](https://raw.githubusercontent.com/shengj1ang/READMEs/refs/heads/ECM-labx/images/P3.png)
 
 1) What result do you get?
+
 The LED stays off.
 
 2) What is the value of the variable when the if comparison is done?
+
 value is 0 (0x0000) at the comparison.
 
 3) Was this expected and why?
+
 Yes. value is an int, but XX, YY, and ZZ are floating-point constants. Assigning a float to an int truncates the fractional part, so 1.2 becomes 1 and 1 - 1.1 becomes 0 after truncation, making the comparison with 0.1 fail.
 
 4) What is the size of the program and data memory used in bytes? How does this compare to the original code?
+
 Original: Program Used 72 bytes, Data Used 2 bytes.
+
 Modified: Program Used 2,278 bytes, Data Used 42 bytes.
+
 The modified version uses much more program (and slightly more data) memory due to floating-point support code.
+
 # Floats to the rescue?
 The integer example above may have gone wrong for obvious reasons. We might expect that changing the variable to be a floating point number would produce the correct result. Try this and see what happens when you run the program.
 
