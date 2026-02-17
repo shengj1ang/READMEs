@@ -121,7 +121,18 @@ This is not just an issue when floats are used to store decimal point numbers, s
     #define ZZ 920020000
     
 - Does the LED light up as expected?
+
+LED does not light up 
+
 - What is the value of the variable when the if comparison is done? (Use debug mode)
+
+![P7](https://raw.githubusercontent.com/shengj1ang/READMEs/refs/heads/ECM-labx/images/P7.png)
+
+In debug, value ≈ 9.2002003E8 while expected (float)ZZ ≈ 9.2001997E8; the difference is diff = 64.0.
+
+Why?
+
+At around 9.2\times10^8, a 32-bit float cannot represent every integer. The spacing between adjacent representable floats is 64, so XX, ZZ, and XX-1 round to different multiples of 64 and the equality test fails.
 
 Try changing the value of XX to the below and seeing what happens
 
