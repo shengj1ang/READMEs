@@ -126,14 +126,23 @@ In debug, value ≈ 9.2002003E8 while expected (float)ZZ ≈ 9.2001997E8; the di
 
 Why?
 
-At around 9.2\times10^8, a 32-bit float cannot represent every integer. The spacing between adjacent representable floats is 64, so XX, ZZ, and XX-1 round to different multiples of 64 and the equality test fails.
+At around 9.2*10^8, a 32-bit float cannot represent every integer. The spacing between adjacent representable floats is 64, so XX, ZZ, and XX-1 round to different multiples of 64 and the equality test fails.
 
 Try changing the value of XX to the below and seeing what happens
 
     #define XX 920020000
     
+
+![P8](https://raw.githubusercontent.com/shengj1ang/READMEs/refs/heads/ECM-labx/images/P8.png)
+
 - Why Does the LED light up despite the calculation being wrong?
+
+Because at this magnitude a 32-bit float cannot represent every integer. 920020000, 920020000 - 1, and 920020000 - 1 all round to the same representable float value (spacing is 64 here), so value and ZZ end up identical in float and the equality test passes even though the true integer arithmetic would differ.
+
+
 - How does the precision of floating point numbers change with magnitude?
+
+Floating-point has roughly constant relative precision, so absolute precision gets worse as numbers get larger. The gap between adjacent representable floats (ULP) grows with magnitude: small numbers can represent unit steps, but around 10^9 a float steps in tens (here 64), so adding/subtracting 1 may have no effect.
 
 Finally, change XX back to the previous value (920020001) and change the type to long int as below:
 
