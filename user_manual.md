@@ -269,7 +269,7 @@ However, including \(C\) encouraged **brightness-driven splits** (distance/light
 **Step 2 — Remove Clear from the classifier (use Clear only for normalisation).**  
 To improve invariance to brightness and distance, we redesigned the feature set to use only \((r,g,b)\) and excluded \(C\) from the decision rule. The clear channel is still used to compute the ratios, and can optionally be used as a separate validity threshold (e.g., `MIN_CLEAR`) to avoid classifying extremely dark/noisy readings, but it no longer participates as a classification feature. This significantly reduced brightness-related misclassifications.
 
-**Step 3 — Mixed dataset evaluation (V1 + V2).**  
+**Step 3 — Mixed dataset evaluation (V1 + V2, V1 is the collection of data with the 3D printed case. V2 is data collection in different environments with/without the case, in the following README, I will use V1 and V2 to stand for the versions).**  
 We merged the two tables (`color_data` and `colordata_v2`) by selecting only the shared useful columns (clear/red/green/blue/label), computing the same normalised features, and evaluating using a stratified 75/25 train/test split. This confirmed that remaining errors were primarily caused by overlapping clusters rather than random noise.
 
 **Step 4 — Random Forest for higher accuracy (ensemble voting).**  
@@ -280,7 +280,7 @@ To further separate the hardest pairs without reintroducing brightness sensitivi
 
 ![sum_rgb_norm](https://github.com/shengj1ang/READMEs/blob/ECM-final-doc/images_for_doc/sum_rgb_norm.png?raw=true)
 
-- These features improved separability for the remaining confusion pairs (especially *light blue vs blue* and *black vs green*) and produced the final high accuracy on mixed V1+V2 testing.
+- These features improved separability for the remaining confusion pairs (especially *light blue vs blue* and *black vs green*) and produced the final high accuracy on mixed testing.
 
 **Step 6 — Surrogate tree for embedded deployment (compact if/else).**  
 Although the Random Forest achieved the best accuracy, converting hundreds of trees into C would produce very large code size. To keep the embedded implementation lightweight, we trained a **surrogate decision tree** that approximates the Random Forest behaviour while remaining a single if/else structure. This surrogate tree is suitable for integer-only C code generation. The surrogate tree is shown in ![SurrogateDecesionTreeFromRandomForest](https://github.com/shengj1ang/READMEs/blob/ECM-final-doc/images_for_doc/DecisionTree-v3-SurrogateDecesionTreeFromRandomForest.png?raw=true)
@@ -412,9 +412,9 @@ There is also another TEST_MODE to measure the battery level lively through seri
 # Video Demonstrations:
 ## Motor Calabration
 
-```none
 [![Watch the video](https://github.com/shengj1ang/READMEs/blob/ECM-final-doc/videos_for_doc/motor-collaboration-v1.png?raw=true)](https://github.com/shengj1ang/READMEs/raw/refs/heads/ECM-final-doc/videos_for_doc/motor-collaboration-v1.mp4)
-```
+
+
 
 ## Colour data collection and Live time colour detecetion (debug) through serial
 
