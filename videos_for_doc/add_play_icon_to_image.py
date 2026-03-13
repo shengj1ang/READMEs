@@ -82,5 +82,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    saved_path = add_play_icon(args.input, args.output)
+    #saved_path = add_play_icon(args.input, args.output)
+    saved_path = add_play_icon(args.input, args.input)
     print(f"Saved new image to: {saved_path}")
