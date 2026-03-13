@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>HTML5 Player</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+
+  <script src="js/index.browser.min.js"></script>
+  <script src="js/hlsjs-p2p-engine.min.js"></script>
+  <script src="js/p2p-chimee-kernel-hls@latest"></script>
+
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #000;
+      overflow: hidden;
+    }
+
+    #player {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .b-videobottom {
+      width: 100%;
+      height: 30px;
+      background: #1D1D1D;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      z-index: 100;
+      text-align: center;
+    }
+
+    .b-adicon {
+      font-size: 12px;
+      color: #555;
+      line-height: 30px;
+      margin-left: 5px;
+      display: inline;
+    }
+  </style>
+</head>
+<body>
+  <div id="player"></div>
+  <div class="b-videobottom">
+    <span class="b-adicon">HTML5 Player</span>
+  </div>
+
+  <script>
+    // READ ?url=...
+    const params = new URLSearchParams(window.location.search);
+    const videoUrl = params.get('url');
+
+    if (!videoUrl) {
+      document.body.innerHTML = '<div style="color:white;padding:20px;">Missing url parameter</div>';
+      throw new Error('Missing url parameter');
+    }
+
+    const player = new Chimee({
+      wrapper: '#player',
+      src: videoUrl,
+      controls: true,
+      autoplay: true,
+      preload: true,
+      kernels: {
+        hls: {
+          handler: window.ChimeeKernelHls,
+          maxBufferSize: 0,
+          maxBufferLength: 5,
+          liveSyncDuration: 30,
+          p2pConfig: {
+            logLevel: 'debug',
+            live: false
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
