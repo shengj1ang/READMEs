@@ -1,0 +1,35 @@
+# Large-scale version of test 12 to exercise the fixed-point rounding while
+# still fitting within unsigned-char step sizes.
+#
+# The wall-touch actions stay discrete, but the entry straight, diagonal run,
+# and exit straight are scaled by 20x:
+#   FORWARD 160, [ALIGN], REVERSE 1, TURN_R 3, FORWARD 180, [ALIGN], REVERSE 1, TURN_L 3
+#
+# Using the geometry rule:
+#   b = round((180 - 1) / sqrt(2)) ~= 127
+#   a = (160 - 1) - 127 = 32
+#
+# so the shortcut becomes:
+#   FORWARD 32, TURN_R 2, FORWARD 127, TURN_L 2
+
+name: paired 135-degree shortcut - 20x scale
+mode: KEEP_ALL_ALIGNS
+turn135: ENABLED
+
+input:
+FORWARD        160
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_R         3
+FORWARD        180
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_L         3
+FORWARD        40
+
+expected:
+FORWARD        32
+TURN_R         2
+FORWARD        127
+TURN_L         2
+FORWARD        40

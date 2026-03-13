@@ -1,0 +1,11 @@
+# Partial cancellation where the forward component is larger.
+
+name: partial cancel - forward dominant
+mode: REMOVE_ALL_ALIGNS
+
+input:
+FORWARD  5
+REVERSE  3
+
+expected:
+FORWARD  2

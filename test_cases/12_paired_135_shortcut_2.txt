@@ -1,0 +1,35 @@
+# Same geometry rule as test 11, but with a longer entry straight and diagonal.
+#
+# Here n == 8 and m == 9, so:
+#   b = round((9 - 1) / sqrt(2)) ~= 6
+#   a = (8 - 1) - 6 = 1
+#
+# Transform:
+#   FORWARD 8, [ALIGN], REVERSE 1, TURN_R 3, FORWARD 9, [ALIGN], REVERSE 1, TURN_L 3
+# becomes:
+#   FORWARD 1, TURN_R 2, FORWARD 6, TURN_L 2
+#
+# This happens before align-mode filtering, so the shortcut applies even in
+# KEEP_ALL_ALIGNS mode.
+
+name: paired 135-degree shortcut - retained entry forward
+mode: KEEP_ALL_ALIGNS
+turn135: ENABLED
+
+input:
+FORWARD        8
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_R         3
+FORWARD        9
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_L         3
+FORWARD        2
+
+expected:
+FORWARD        1
+TURN_R         2
+FORWARD        6
+TURN_L         2
+FORWARD        2

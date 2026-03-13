@@ -1,0 +1,20 @@
+# Chained cancellations that reduce to an empty path.
+#
+# Stack trace through compactSteps:
+#   FORWARD 5                            → [FWD 5]
+#   TURN_L  2  (different type)          → [FWD 5, L2]
+#   TURN_L  2  (same as top)     merge   → [FWD 5, L4]
+#   TURN_R  4  (opposite)        cancel  → [FWD 5]
+#   REVERSE 5  (opposite)        cancel  → []
+
+name: chained cancel to empty
+mode: REMOVE_ALL_ALIGNS
+
+input:
+FORWARD  5
+TURN_L   2
+TURN_L   2
+TURN_R   4
+REVERSE  5
+
+expected:

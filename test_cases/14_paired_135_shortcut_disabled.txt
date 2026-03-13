@@ -1,0 +1,31 @@
+# Same geometry as test 12, but with the 135-degree shortcut disabled.
+#
+# With turn135 disabled, simplifyPath should only apply the align mode and the
+# generic cancellation/merge pass. Under KEEP_ALL_ALIGNS that means the path is
+# preserved exactly as recorded.
+
+name: paired 135-degree shortcut - disabled
+mode: KEEP_ALL_ALIGNS
+turn135: DISABLED
+
+input:
+FORWARD        8
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_R         3
+FORWARD        9
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_L         3
+FORWARD        2
+
+expected:
+FORWARD        8
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_R         3
+FORWARD        9
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_L         3
+FORWARD        2

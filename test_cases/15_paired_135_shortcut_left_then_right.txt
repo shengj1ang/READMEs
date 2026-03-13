@@ -1,0 +1,23 @@
+# Mirror case of test 11: the paired 135-degree shortcut starts with a left
+# turn and then a right turn. The same geometry rule should apply symmetrically.
+
+name: paired 135-degree shortcut - left then right
+mode: KEEP_ALL_ALIGNS
+turn135: ENABLED
+
+input:
+FORWARD        4
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_L         3
+FORWARD        5
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_R         3
+FORWARD        2
+
+expected:
+TURN_L         2
+FORWARD        3
+TURN_R         2
+FORWARD        2

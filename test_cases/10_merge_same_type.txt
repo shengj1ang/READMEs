@@ -1,0 +1,13 @@
+# Consecutive steps of the same action are merged into one.
+# (recordAction already does this at record time, but simplifyPath
+# should handle it robustly regardless.)
+
+name: merge consecutive same-type steps
+mode: REMOVE_ALL_ALIGNS
+
+input:
+FORWARD  3
+FORWARD  4
+
+expected:
+FORWARD  7

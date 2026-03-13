@@ -1,0 +1,37 @@
+# Worked example — REMOVE_ALL_ALIGNS (mode 2).
+#
+# All four align steps are stripped.
+#
+# Compact pass:
+#   FORWARD 9 + REVERSE 4  -> FORWARD 5
+#   FORWARD 4 + REVERSE 1  -> FORWARD 3
+#   TURN_L 1 + TURN_R 1    -> exact cancel
+
+name: example path / REMOVE_ALL_ALIGNS
+mode: REMOVE_ALL_ALIGNS
+
+input:
+FORWARD        9
+FORWARD_ALIGN  1
+REVERSE        4
+TURN_R         2
+FORWARD        4
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_L         4
+REVERSE_ALIGN  1
+FORWARD        4
+TURN_L         2
+FORWARD        5
+TURN_L         1
+FORWARD_ALIGN  1
+TURN_R         1
+
+expected:
+FORWARD  5
+TURN_R   2
+FORWARD  3
+TURN_L   4
+FORWARD  4
+TURN_L   2
+FORWARD  5

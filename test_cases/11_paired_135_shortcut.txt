@@ -1,0 +1,36 @@
+# Paired opposite 135-degree turns approximate a direct connector.
+#
+# Let the diagonal run between the two 135-degree turns be `m - 1` step units
+# (the final REVERSE 1 is peeled off before the second turn). Project that
+# onto the axis using:
+#   b = round((m - 1) / sqrt(2))
+# and shorten the entry straight to:
+#   a = max(0, (n - 1) - b)
+#
+# The shortcut becomes:
+#   FORWARD a, TURN_* 2, FORWARD b, TURN_* 2
+#
+# In this case n == 4 and m == 5, so b ~= 3 and a == 0.
+# This happens before align-mode filtering, so the shortcut applies even in
+# KEEP_ALL_ALIGNS mode.
+
+name: paired 135-degree shortcut - exact approach trim
+mode: KEEP_ALL_ALIGNS
+turn135: ENABLED
+
+input:
+FORWARD        4
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_R         3
+FORWARD        5
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_L         3
+FORWARD        2
+
+expected:
+TURN_R         2
+FORWARD        3
+TURN_L         2
+FORWARD        2

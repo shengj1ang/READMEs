@@ -1,0 +1,44 @@
+# Worked example — KEEP_STEP1_ALIGNS (mode 1).
+#
+# Strip pass:
+#   FORWARD_ALIGN @index 1  — neighbours are FORWARD 9 / REVERSE 4  -> removed
+#   FORWARD_ALIGN @index 5  — right neighbour is REVERSE 1          -> kept
+#   REVERSE_ALIGN @index 8  — neighbours are FORWARD 4 / FORWARD 4 -> removed
+#   FORWARD_ALIGN @index 12 — neighbours are TURN_L 1 / TURN_R 1   -> removed
+#
+# Compact pass:
+#   FORWARD 9 + REVERSE 4  -> FORWARD 5
+#   The kept FORWARD_ALIGN still separates FORWARD 4 from REVERSE 1,
+#   so that pair does not cancel.
+#   TURN_L 1 + TURN_R 1    -> exact cancel once the final align is removed.
+
+name: example path / KEEP_STEP1_ALIGNS
+mode: KEEP_STEP1_ALIGNS
+
+input:
+FORWARD        9
+FORWARD_ALIGN  1
+REVERSE        4
+TURN_R         2
+FORWARD        4
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_L         4
+REVERSE_ALIGN  1
+FORWARD        4
+TURN_L         2
+FORWARD        5
+TURN_L         1
+FORWARD_ALIGN  1
+TURN_R         1
+
+expected:
+FORWARD        5
+TURN_R         2
+FORWARD        4
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_L         4
+FORWARD        4
+TURN_L         2
+FORWARD        5

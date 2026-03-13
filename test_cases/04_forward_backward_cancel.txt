@@ -1,0 +1,10 @@
+# Exact cancellation: equal forward and backward steps vanish completely.
+
+name: forward + backward exact cancel
+mode: REMOVE_ALL_ALIGNS
+
+input:
+FORWARD  3
+REVERSE  3
+
+expected:

@@ -1,0 +1,12 @@
+# Partial cancellation where the reverse component is larger.
+# The result flips direction to REVERSE.
+
+name: partial cancel - reverse dominant
+mode: REMOVE_ALL_ALIGNS
+
+input:
+FORWARD  3
+REVERSE  5
+
+expected:
+REVERSE  2

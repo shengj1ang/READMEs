@@ -1,0 +1,10 @@
+# Equal and opposite turns cancel to nothing.
+
+name: turn exact cancel
+mode: REMOVE_ALL_ALIGNS
+
+input:
+TURN_R  2
+TURN_L  2
+
+expected:

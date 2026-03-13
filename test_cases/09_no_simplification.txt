@@ -1,0 +1,15 @@
+# A sequence where no adjacent pairs share or oppose each other.
+# The algorithm must leave it unchanged.
+
+name: no simplification possible (interleaved types)
+mode: REMOVE_ALL_ALIGNS
+
+input:
+FORWARD  3
+TURN_R   2
+REVERSE  4
+
+expected:
+FORWARD  3
+TURN_R   2
+REVERSE  4

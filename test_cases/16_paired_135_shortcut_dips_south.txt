@@ -1,0 +1,34 @@
+# This 135-degree shortcut case has a long enough diagonal run that the robot
+# ends up south of the global start line before the final forward move.
+#
+# The same projection rule still applies:
+#   b = round((8 - 1) / sqrt(2)) ~= 5
+#   a = (2 - 1) - 5 = -4
+#
+# so the shortcut becomes:
+#   REVERSE 4, TURN_R 2, FORWARD 5, TURN_L 2
+#
+# The trailing FORWARD 2 remains after the shortcut block, so the simplified
+# path still ends south of the global start line while backing up first.
+
+name: paired 135-degree shortcut - diagonal dips south
+mode: KEEP_ALL_ALIGNS
+turn135: ENABLED
+
+input:
+FORWARD        2
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_R         3
+FORWARD        8
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_L         3
+FORWARD        2
+
+expected:
+REVERSE        4
+TURN_R         2
+FORWARD        5
+TURN_L         2
+FORWARD        2

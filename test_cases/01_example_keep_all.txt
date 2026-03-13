@@ -1,0 +1,43 @@
+# Worked example — KEEP_ALL_ALIGNS (mode 0).
+#
+# The step-size-1 filter is ignored in this mode, so all four align steps are
+# preserved. FORWARD_ALIGN's logical opposite is REVERSE_ALIGN (not REVERSE),
+# so the aligns still block any forward/reverse cancellation across them.
+# Output should be identical to input.
+
+name: example path / KEEP_ALL_ALIGNS
+mode: KEEP_ALL_ALIGNS
+
+input:
+FORWARD        9
+FORWARD_ALIGN  1
+REVERSE        4
+TURN_R         2
+FORWARD        4
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_L         4
+REVERSE_ALIGN  1
+FORWARD        4
+TURN_L         2
+FORWARD        5
+TURN_L         1
+FORWARD_ALIGN  1
+TURN_R         1
+
+expected:
+FORWARD        9
+FORWARD_ALIGN  1
+REVERSE        4
+TURN_R         2
+FORWARD        4
+FORWARD_ALIGN  1
+REVERSE        1
+TURN_L         4
+REVERSE_ALIGN  1
+FORWARD        4
+TURN_L         2
+FORWARD        5
+TURN_L         1
+FORWARD_ALIGN  1
+TURN_R         1
